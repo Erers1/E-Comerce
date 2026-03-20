@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @Builder
 public class ShippingMethodDTO {
     private Long id;

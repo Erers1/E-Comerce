@@ -4,12 +4,11 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @Builder
 public class ProductDTO {
     @NonNull
@@ -17,12 +16,12 @@ public class ProductDTO {
     @NonNull
     private String name;
     @NonNull
+    private List<CategoriesDTO> categories;
+    @NonNull
     private BigDecimal sellPrice;
     private int stock;
     @NonNull
     private String img;
-    @NonNull
-    private List<String> tag;
     @NonNull
     private BigDecimal review;
 }

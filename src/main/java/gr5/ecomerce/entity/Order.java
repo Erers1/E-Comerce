@@ -21,7 +21,8 @@ public class Order {
     private LocalDateTime orderDate;
     private BigDecimal totalPrice;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
+    @JoinColumn(name = "discount_id")
     private Discount discount;
 
     @Enumerated(EnumType.STRING)
@@ -38,7 +39,7 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetail;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 }

@@ -24,4 +24,7 @@ public class Discount {
     private LocalDateTime appliedDate;
     private LocalDateTime expiredDate;
     private boolean isExpired;
+
+    @OneToMany(mappedBy = "discount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> order;
 }

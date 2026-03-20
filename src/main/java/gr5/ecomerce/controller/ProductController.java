@@ -26,8 +26,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAll() {
-        return service.getAll();
+    public ResponseEntity<List<ProductDTO>> getAll(@RequestParam int page,@RequestParam int size) {
+        return service.getAll(page, size);
     }
 
     @PutMapping("/update")

@@ -9,10 +9,12 @@ import gr5.ecomerce.repository.ShippingMethodRepository;
 import gr5.ecomerce.service.ShippingMethodService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class ShippingMethodServiceImplement implements ShippingMethodService {
     private final ShippingMethodRepository shippingMethodRepository;

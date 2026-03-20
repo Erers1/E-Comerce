@@ -19,11 +19,11 @@ public class OrderDetail {
     private int quantity;
     private BigDecimal subTotal;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 }

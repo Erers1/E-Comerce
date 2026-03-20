@@ -25,4 +25,7 @@ public class Product {
     private BigDecimal review;
     private boolean isDeleted;
 
+    @OneToMany
+    @JoinColumn(name = "category_id", nullable = false)
+    private List<Categories> categories;
 }
