@@ -1,5 +1,6 @@
 package gr5.ecomerce.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
@@ -7,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class AuthLoginDTO {
-    @NonNull
+    @NotNull(message = "Username không được để trống")
     private String username;
-    @NonNull
+    @NotNull(message = "Password không được để trống")
     private String password;
 }

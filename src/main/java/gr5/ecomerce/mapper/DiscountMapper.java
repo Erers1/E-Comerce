@@ -20,7 +20,6 @@ public class DiscountMapper {
                 .description(dto.getDescription())
                 .discountLimit(dto.getLimit())
                 .discountValue(dto.getDiscountValue())
-                .appliedDate(dto.getAppliedDate())
                 .expiredDate(dto.getExpiredDate())
                 .build();
     }

@@ -1,5 +1,6 @@
 package gr5.ecomerce.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class AttributesDTO {
+    @NotNull(message = "Tên thuộc tính không được để trống")
     private String name;
     private List<String> value;
 }

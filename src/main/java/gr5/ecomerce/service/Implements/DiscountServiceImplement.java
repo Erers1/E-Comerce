@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,7 +23,11 @@ public class DiscountServiceImplement implements DiscountService {
 
     @Override
     public ResponseEntity<DiscountDTO> create(DiscountDTO dto) {
+        if (dto.getExpiredDate() == null && dto.getExpiredDate().isBefore(dto.getAppliedDate())) {
+            throw new IllegalArgumentException("Expired date is not valid");
+        }
         Discount discount = DiscountMapper.toEntity(dto);
+        discount.setAppliedDate(LocalDateTime.now());
         discountRepository.save(discount);
         return ResponseEntity.ok(DiscountMapper.toDto(discount));
     }
