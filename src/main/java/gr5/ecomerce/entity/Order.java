@@ -28,7 +28,8 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
+    @JoinColumn(name = "shipping_id")
     private ShippingMethod shippingMethod;
 
     @Enumerated(EnumType.STRING)

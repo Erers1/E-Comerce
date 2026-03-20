@@ -8,22 +8,20 @@ public class DiscountMapper {
         return DiscountDTO.builder()
                 .id(discount.getId())
                 .description(discount.getDescription())
-                .limit(discount.getLimit())
+                .limit(discount.getDiscountLimit())
                 .discountValue(discount.getDiscountValue())
                 .appliedDate(discount.getAppliedDate())
                 .expiredDate(discount.getExpiredDate())
-                .isExpired(discount.isExpired())
                 .build();
     }
 
     public static Discount toEntity(DiscountDTO dto) {
         return Discount.builder()
                 .description(dto.getDescription())
-                .limit(dto.getLimit())
+                .discountLimit(dto.getLimit())
                 .discountValue(dto.getDiscountValue())
                 .appliedDate(dto.getAppliedDate())
                 .expiredDate(dto.getExpiredDate())
-                .isExpired(dto.isExpired())
                 .build();
     }
 }

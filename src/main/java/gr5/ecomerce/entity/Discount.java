@@ -19,11 +19,10 @@ public class Discount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-    private BigDecimal limit;
+    private BigDecimal discountLimit;
     private BigDecimal discountValue;
     private LocalDateTime appliedDate;
     private LocalDateTime expiredDate;
-    private boolean isExpired;
 
     @OneToMany(mappedBy = "discount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> order;

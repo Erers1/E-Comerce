@@ -34,7 +34,7 @@ public class ProductServiceImplement implements ProductService {
 
         for (CategoriesDTO category : dto.getCategories()) {
             Categories cat = Categories.builder()
-
+                    .product(product)
                     .name(category.getName()).build();
             List<Attributes> attributes = new ArrayList<>();
             for (AttributesDTO attribute : category.getAttributes()) {
@@ -73,7 +73,7 @@ public class ProductServiceImplement implements ProductService {
     @Override
     public ResponseEntity<List<ProductDTO>> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").descending());
-        List<ProductDTO> products = repository.findAll().stream()
+        List<ProductDTO> products = repository.findAll(pageable).stream()
                 .map(ProductMapper::toDto).toList();
         return ResponseEntity.ok(products);
     }

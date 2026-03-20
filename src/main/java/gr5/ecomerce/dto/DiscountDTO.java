@@ -16,5 +16,4 @@ public class DiscountDTO {
     private BigDecimal discountValue;
     private LocalDateTime appliedDate;
     private LocalDateTime expiredDate;
-    private boolean isExpired;
 }

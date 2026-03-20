@@ -22,5 +22,6 @@ public class Categories {
     private List<Attributes> attributes;
 
     @ManyToOne
-    private List<Product> product;
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

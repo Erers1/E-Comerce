@@ -57,8 +57,8 @@ public class DiscountServiceImplement implements DiscountService {
         BigDecimal amount = order.getTotalPrice()
                 .multiply(discount.getDiscountValue());
 
-        if (discount.getLimit() != null && amount.compareTo(discount.getLimit()) > 0) {
-            newTotal = newTotal.subtract(discount.getLimit());
+        if (discount.getDiscountLimit() != null && amount.compareTo(discount.getDiscountLimit()) > 0) {
+            newTotal = newTotal.subtract(discount.getDiscountLimit());
         } else {
             newTotal = newTotal.subtract(amount);
         }

@@ -29,6 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
+
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -45,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     .orElseThrow(()-> new RuntimeException("You need to login first!"));
 
             if (!jwtUtils.validate(token, user)) {
-                response.getWriter().write("Incorrect token!");
+                sendError(response, "Invalid token");
                 return;
             }
 
@@ -67,7 +68,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            response.getWriter().write(e.getMessage());
+            sendError(response, "Internal Server Error");
+            return;
         }
     }
 
@@ -76,6 +78,5 @@ public class JwtFilter extends OncePerRequestFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(message);
-
     }
 }

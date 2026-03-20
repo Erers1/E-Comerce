@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "tblShippingMethod")
@@ -20,7 +21,6 @@ public class ShippingMethod {
     private String description;
     private BigDecimal fee;
 
-    @OneToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+    @OneToMany(mappedBy = "shippingMethod", cascade = CascadeType.ALL,  orphanRemoval = true)
+    private List<Order> order;
 }

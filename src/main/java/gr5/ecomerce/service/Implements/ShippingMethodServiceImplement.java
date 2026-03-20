@@ -36,6 +36,7 @@ public class ShippingMethodServiceImplement implements ShippingMethodService {
 
         BigDecimal newTotal = order.getTotalPrice().add(shippingMethod.getFee());
         order.setTotalPrice(newTotal);
+        order.setShippingMethod(shippingMethod);
         orderRepository.save(order);
         return ResponseEntity.ok("Shipping method applied successfully on order number: "+ order.getId());
     }
