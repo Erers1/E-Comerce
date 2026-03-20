@@ -81,12 +81,16 @@ public class AuthServiceImplement implements AuthService {
         String refreshToken = null;
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
-            throw new RuntimeException("");
+            throw new RuntimeException("Cookies is null");
         }
         for (Cookie cookie : cookies) {
             if ("refresh-token".equals(cookie.getName())) {
                 refreshToken = cookie.getValue();
             }
+        }
+
+        if (refreshToken == null) {
+            throw new RuntimeException("You have to login!");
         }
 
         sessionRepository.delByToken(refreshToken);

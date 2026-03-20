@@ -1,6 +1,8 @@
 package gr5.ecomerce.controller;
 
+import gr5.ecomerce.dto.CommentDTO;
 import gr5.ecomerce.dto.ProductDTO;
+import gr5.ecomerce.service.CommentService;
 import gr5.ecomerce.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService service;
+    private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<ProductDTO> add(@Valid @RequestBody ProductDTO dto) {
@@ -38,5 +41,24 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDTO> delete(@PathVariable Long id) {
         return service.delete(id);
+    }
+
+    @GetMapping("/comment")
+    public ResponseEntity<List<CommentDTO>> getProductComments(@RequestParam Long productId) {
+        return commentService.getCommentsByProduct(productId);
+    }
+
+    @PostMapping("/comment/write")
+    public ResponseEntity<CommentDTO> writeComment(@RequestParam Long userId,
+                                                   @RequestParam Long productId,
+                                                   @Valid @RequestBody CommentDTO commentDTO) {
+        return commentService.writeComment(userId, productId, commentDTO);
+    }
+
+    @DeleteMapping("/comment")
+    public ResponseEntity<CommentDTO> deleteComment(@RequestParam Long userId,
+                                                    @RequestParam Long productId,
+                                                    @RequestParam Long commentId) {
+        return commentService.deleteComment(userId, productId, commentId);
     }
 }

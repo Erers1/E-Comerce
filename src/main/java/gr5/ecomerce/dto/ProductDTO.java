@@ -1,5 +1,6 @@
 package gr5.ecomerce.dto;
 
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
