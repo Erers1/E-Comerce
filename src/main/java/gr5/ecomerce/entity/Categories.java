@@ -20,4 +20,7 @@ public class Categories {
 
     @OneToMany(mappedBy = "categories",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attributes> attributes;
+
+    @ManyToOne
+    private List<Product> product;
 }

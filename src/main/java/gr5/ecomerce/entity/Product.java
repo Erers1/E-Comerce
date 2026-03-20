@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name = "tblEntity")
+@Table(name = "tblProduct")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,11 +21,9 @@ public class Product {
     private BigDecimal sellPrice;
     private int stock;
     private String img;
-    private List<String> tag;
     private BigDecimal review;
     private boolean isDeleted;
 
-    @OneToMany
-    @JoinColumn(name = "category_id", nullable = false)
+    @OneToMany(mappedBy = "product",  cascade = CascadeType.ALL,  orphanRemoval = true)
     private List<Categories> categories;
 }

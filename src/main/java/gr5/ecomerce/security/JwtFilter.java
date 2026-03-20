@@ -7,7 +7,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.jspecify.annotations.NonNull;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,42 +27,55 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserRepository repository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = header.substring(7);
+        try {
 
-        Long userId = Long.parseLong(jwtUtils.extractId(token));
-        String role = jwtUtils.extractRole(token);
+            String token = header.substring(7);
 
-        User user = repository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User not found!"));
+            Long userId = Long.parseLong(jwtUtils.extractId(token));
+            String role = jwtUtils.extractRole(token);
 
-        if (!jwtUtils.validate(token, user)) {
+            User user = repository.findById(userId)
+                    .orElseThrow(()-> new RuntimeException("You need to login first!"));
+
+            if (!jwtUtils.validate(token, user)) {
+                response.getWriter().write("Incorrect token!");
+                return;
+            }
+
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                List<SimpleGrantedAuthority> authorities = List.of(
+                        new SimpleGrantedAuthority("ROLE_" + role)
+                );
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userId,
+                                null,
+                                authorities
+                        );
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+
             filterChain.doFilter(request, response);
-            return;
+        } catch (Exception e) {
+            response.getWriter().write(e.getMessage());
         }
+    }
 
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            List<SimpleGrantedAuthority> authorities = List.of(
-                    new SimpleGrantedAuthority("ROLE_" + role)
-            );
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(
-                            userId,
-                            null,
-                            authorities
-                    );
-            authToken.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-        }
+    private void sendError(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(message);
 
-        filterChain.doFilter(request, response);
     }
 }

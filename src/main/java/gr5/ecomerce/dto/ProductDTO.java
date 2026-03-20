@@ -11,11 +11,9 @@ import java.util.Map;
 @NoArgsConstructor
 @Builder
 public class ProductDTO {
-    @NonNull
     private Long id;
     @NonNull
     private String name;
-    @NonNull
     private List<CategoriesDTO> categories;
     @NonNull
     private BigDecimal sellPrice;

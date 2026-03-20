@@ -4,11 +4,13 @@ import gr5.ecomerce.entity.Role;
 import gr5.ecomerce.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
@@ -20,6 +22,11 @@ public class Utils {
     private Long accessExpiration;
     @Value("${jwt.refreshExpiration}")
     private Long refreshExpiration;
+
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
     public String generateToken(Long id, String username, Role role) {
         return Jwts.builder()
                 .setSubject(username)
@@ -27,7 +34,7 @@ public class Utils {
                 .setId(id.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis()+accessExpiration))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -37,13 +44,13 @@ public class Utils {
                 .setId(id.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis()+refreshExpiration))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String extractId(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes())
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -52,7 +59,7 @@ public class Utils {
 
     public boolean isExpireDate(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes())
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -62,7 +69,7 @@ public class Utils {
 
     public String extractRole(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes())
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody().get("role", String.class);
