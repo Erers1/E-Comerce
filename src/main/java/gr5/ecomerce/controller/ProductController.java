@@ -2,6 +2,7 @@ package gr5.ecomerce.controller;
 
 import gr5.ecomerce.dto.CommentDTO;
 import gr5.ecomerce.dto.ProductDTO;
+import gr5.ecomerce.dto.TopProductDTO;
 import gr5.ecomerce.service.CommentService;
 import gr5.ecomerce.service.ProductService;
 import jakarta.validation.Valid;
@@ -31,6 +32,11 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAll(@RequestParam int page,@RequestParam int size) {
         return service.getAll(page, size);
+    }
+
+    @GetMapping("/statistic/top")
+    public ResponseEntity<List<TopProductDTO>> topProduct() {
+        return service.topProduct();
     }
 
     @PutMapping("/update")

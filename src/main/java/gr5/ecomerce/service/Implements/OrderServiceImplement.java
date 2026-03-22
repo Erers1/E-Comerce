@@ -1,8 +1,6 @@
 package gr5.ecomerce.service.Implements;
 
-import gr5.ecomerce.dto.OrderDTO;
-import gr5.ecomerce.dto.OrderDetailDTO;
-import gr5.ecomerce.dto.OrderReqDTO;
+import gr5.ecomerce.dto.*;
 import gr5.ecomerce.entity.*;
 import gr5.ecomerce.mapper.OrderMapper;
 import gr5.ecomerce.repository.OrderRepository;
@@ -15,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,5 +104,49 @@ public class OrderServiceImplement implements OrderService {
             throw new RuntimeException("Your order has been deliveried or on their way!");
         }
         return ResponseEntity.ok(OrderMapper.toDto(order));
+    }
+
+    @Override
+    public ResponseEntity<ProfitDTO> getProfitByDay() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = today.atStartOfDay();
+        LocalDateTime end = today.plusDays(1).atStartOfDay();
+        List<Order> orders = orderRepository.getProfit(start, end);
+        BigDecimal total = BigDecimal.ZERO;
+        List<ProfitDTO> profits = new ArrayList<>();
+        for (Order order : orders) {
+            total = total.add(order.getTotalPrice());
+        }
+        List<OrderDTO> orderDTOS = orders.stream()
+                .map(OrderMapper::toDto).toList();
+        ProfitDTO profitDTO = ProfitDTO.builder()
+                .order(orderDTOS)
+                .total(total)
+                .build();
+        return ResponseEntity.ok(profitDTO);
+    }
+
+    @Override
+    public ResponseEntity<ProfitDTO> getProfitByMonth() {
+        LocalDateTime startOfMonth = LocalDate.now()
+                .withDayOfMonth(1)
+                .atStartOfDay();
+        LocalDateTime endOfMonth = LocalDate.now()
+                .plusMonths(1)
+                .withDayOfMonth(1)
+                .atStartOfDay();
+        List<Order> orders = orderRepository.getProfit(startOfMonth, endOfMonth);
+        BigDecimal total = BigDecimal.ZERO;
+        List<ProfitDTO> profits = new ArrayList<>();
+        for (Order order : orders) {
+            total = total.add(order.getTotalPrice());
+        }
+        List<OrderDTO> orderDTOS = orders.stream()
+                .map(OrderMapper::toDto).toList();
+        ProfitDTO profitDTO = ProfitDTO.builder()
+                .order(orderDTOS)
+                .total(total)
+                .build();
+        return ResponseEntity.ok(profitDTO);
     }
 }

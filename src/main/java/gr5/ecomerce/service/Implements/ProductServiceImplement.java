@@ -3,6 +3,7 @@ package gr5.ecomerce.service.Implements;
 import gr5.ecomerce.dto.AttributesDTO;
 import gr5.ecomerce.dto.CategoriesDTO;
 import gr5.ecomerce.dto.ProductDTO;
+import gr5.ecomerce.dto.TopProductDTO;
 import gr5.ecomerce.entity.*;
 import gr5.ecomerce.mapper.ProductMapper;
 import gr5.ecomerce.repository.OrderDetailRepository;
@@ -102,5 +103,12 @@ public class ProductServiceImplement implements ProductService {
         product.setImg(dto.getImg());
         repository.save(product);
         return ResponseEntity.ok(ProductMapper.toDto(product));
+    }
+
+    @Override
+    public ResponseEntity<List<TopProductDTO>> topProduct() {
+        Pageable pageable = PageRequest.of(0, 10);
+        List<TopProductDTO> topProducts = orderDetailRepository.findTopProduct(pageable);
+        return ResponseEntity.ok(topProducts);
     }
 }

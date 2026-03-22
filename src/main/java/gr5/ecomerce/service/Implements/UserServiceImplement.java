@@ -1,7 +1,9 @@
 package gr5.ecomerce.service.Implements;
 
+import gr5.ecomerce.dto.OrderDTO;
 import gr5.ecomerce.dto.UserDTO;
 import gr5.ecomerce.entity.User;
+import gr5.ecomerce.mapper.OrderMapper;
 import gr5.ecomerce.mapper.UserMapper;
 import gr5.ecomerce.repository.UserRepository;
 import gr5.ecomerce.security.Utils;
@@ -10,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +35,14 @@ public class UserServiceImplement implements UserService {
                 .orElseThrow(()-> new RuntimeException("User not found!"));
 
         return ResponseEntity.ok(UserMapper.toDto(user));
+    }
+
+    @Override
+    public ResponseEntity<List<OrderDTO>> getHistory(Long id) {
+        User user = repository.findById(id)
+                .orElseThrow(()-> new RuntimeException("User not found!"));
+        List<OrderDTO> dto = user.getOrder().stream()
+                .map(OrderMapper::toDto).toList();
+        return ResponseEntity.ok(dto);
     }
 }

@@ -1,6 +1,7 @@
 package gr5.ecomerce.controller;
 
 import gr5.ecomerce.dto.CommentDTO;
+import gr5.ecomerce.dto.OrderDTO;
 import gr5.ecomerce.dto.UserDTO;
 import gr5.ecomerce.service.CommentService;
 import gr5.ecomerce.service.UserService;
@@ -29,5 +30,10 @@ public class UserController {
     @GetMapping("/comment")
     public ResponseEntity<List<CommentDTO>> getComments(@RequestParam Long userId) {
         return commentService.getCommentsByUser(userId);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<OrderDTO>> getHistory(@RequestParam Long userId) {
+        return service.getHistory(userId);
     }
 }

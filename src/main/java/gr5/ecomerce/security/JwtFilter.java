@@ -68,7 +68,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            sendError(response, "Internal Server Error");
+            e.printStackTrace();
+            sendError(response, e.getMessage());
             return;
         }
     }
