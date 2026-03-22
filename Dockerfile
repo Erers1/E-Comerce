@@ -1,17 +1,15 @@
-# Bước 1: Sử dụng hình ảnh Maven để build dự án
+# Bước 1: Build dự án bằng Maven
 FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
-# Copy toàn bộ code vào trong container
 COPY . .
-# Chạy lệnh build để tạo file .jar (bỏ qua chạy test để nhanh hơn)
 RUN mvn clean package -DskipTests
 
-# Bước 2: Sử dụng hình ảnh JDK nhẹ để chạy ứng dụng
-FROM openjdk:17-jdk-slim
+# Bước 2: Chạy ứng dụng bằng JRE của Eclipse Temurin
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-# Copy file .jar đã build từ bước 1 sang bước này
+# Copy file .jar từ bước build sang
 COPY --from=build /app/target/*.jar app.jar
-# Mở cổng 10000 (cổng mặc định của Render)
+# Mở cổng 10000
 EXPOSE 10000
-# Lệnh để khởi chạy Spring Boot
+# Lệnh chạy ứng dụng
 ENTRYPOINT ["java", "-jar", "app.jar", "--server.port=10000"]
