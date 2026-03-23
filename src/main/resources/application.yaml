@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: ecomerce
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/ecomerce_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:123456}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob.non_contextual_creation: true
+
+jwt:
+  secret: ${JWT_SECRET:b3f9e8a4c2d7f6a1e9c5b8d4f2a7c6e1b9d3f8a4c7e2d6f1a5b9c3e7d4f8a2c}
+  accessExpiration: ${JWT_ACCESS_EXPIRATION:900000}
+  refreshExpiration: ${JWT_REFRESH_EXPIRATION:604800000}

@@ -32,9 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
-### Config Files ###
-src/main/resources/application.yaml
-src/main/resources/application.yml
-# Nếu bạn có dùng profile như dev, prod thì chặn luôn:
-src/main/resources/application-*.yaml
-src/main/resources/application-*.yml
+#### Config Files ###
+#src/main/resources/application.yaml
+#src/main/resources/application.yml
+## Nếu bạn có dùng profile như dev, prod thì chặn luôn:
+#src/main/resources/application-*.yaml
+#src/main/resources/application-*.yml
