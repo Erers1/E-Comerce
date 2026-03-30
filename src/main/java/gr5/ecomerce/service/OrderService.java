@@ -13,6 +13,8 @@ import java.util.List;
 
 public interface OrderService {
     ResponseEntity<OrderDTO> create(Long userId, OrderReqDTO order);
+    ResponseEntity<String> createPayment(Long id);
+    void paid(Long id);
     ResponseEntity<OrderDTO> cancel(Long id);
     ResponseEntity<ProfitDTO> getProfitByDay();
     ResponseEntity<ProfitDTO> getProfitByMonth();

@@ -1,19 +1,16 @@
 package gr5.ecomerce.mapper;
 
-import gr5.ecomerce.dto.AttributesDTO;
-import gr5.ecomerce.dto.CategoriesDTO;
-import gr5.ecomerce.entity.Categories;
+import gr5.ecomerce.dto.AttributeDTO;
+import gr5.ecomerce.dto.CategoryDTO;
+import gr5.ecomerce.entity.Category;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryMapper {
-    public static CategoriesDTO toDto(Categories categories) {
-        List<AttributesDTO> attributes = categories.getAttributes()
-                .stream().map(AttributeMapper::toDto).toList();
-        return CategoriesDTO.builder()
+    public static CategoryDTO toDto(Category categories) {
+        return CategoryDTO.builder()
+                .id(categories.getId())
                 .name(categories.getName())
-                .attributes(attributes)
                 .build();
     }
 }

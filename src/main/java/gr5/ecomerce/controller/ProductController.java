@@ -4,12 +4,14 @@ import gr5.ecomerce.dto.CommentDTO;
 import gr5.ecomerce.dto.ProductDTO;
 import gr5.ecomerce.dto.TopProductDTO;
 import gr5.ecomerce.service.CommentService;
+import gr5.ecomerce.service.ImageService;
 import gr5.ecomerce.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService service;
     private final CommentService commentService;
+    private final ImageService imageService;
 
     @PreAuthorize("hasRole('SELLER')")
     @PostMapping
@@ -30,6 +33,12 @@ public class ProductController {
     @PostMapping("/all")
     public ResponseEntity<List<ProductDTO>> addAll(@Valid @RequestBody List<ProductDTO> dto) {
         return service.addAll(dto);
+    }
+
+    @PostMapping("/imgs")
+    public ResponseEntity<List<String>> uploadProductImage(@RequestParam Long product_id, @RequestPart("image") List<MultipartFile> files) {
+        String filename = "products";
+        return imageService.uploadProductImage(product_id, files, filename);
     }
 
     @PreAuthorize("hasRole('SELLER, USER')")

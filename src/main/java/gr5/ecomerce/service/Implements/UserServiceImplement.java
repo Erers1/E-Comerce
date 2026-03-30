@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -44,5 +45,10 @@ public class UserServiceImplement implements UserService {
         List<OrderDTO> dto = user.getOrder().stream()
                 .map(OrderMapper::toDto).toList();
         return ResponseEntity.ok(dto);
+    }
+
+    @Override
+    public ResponseEntity<String> setAvarta(MultipartFile file) {
+        return null;
     }
 }

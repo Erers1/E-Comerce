@@ -12,8 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CategoriesDTO {
+public class CategoryDTO {
+    private Long id;
     @NotNull(message = "Tên danh mục không được để trống")
     private String name;
-    private List<AttributesDTO> attributes;
 }

@@ -6,22 +6,18 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "tblCategory")
+@Table(name = "tblAttribute")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Categories {
+public class Attribute {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "categories",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Attributes> attributes;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @OneToMany(mappedBy = "attribute", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AttributeValue> attributeValues;
 }

@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "tblProduct")
@@ -20,12 +21,23 @@ public class Product {
     private String name;
     private BigDecimal sellPrice;
     private int stock;
-    private String img;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> img;
+
     private BigDecimal review;
     private boolean isDeleted;
 
-    @OneToMany(mappedBy = "product",  cascade = CascadeType.ALL,  orphanRemoval = true)
-    private List<Categories> categories;
+    @ManyToMany
+    @JoinTable(
+            name = "product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductAttrValue> productAttrValues;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,  orphanRemoval = true)
     private List<Comment> comments;

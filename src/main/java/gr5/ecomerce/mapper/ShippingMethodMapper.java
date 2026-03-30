@@ -6,6 +6,7 @@ import gr5.ecomerce.entity.ShippingMethod;
 public class ShippingMethodMapper {
     public static ShippingMethodDTO toDto(ShippingMethod method) {
         return ShippingMethodDTO.builder()
+                .id(method.getId())
                 .name(method.getName())
                 .description(method.getDescription())
                 .fee(method.getFee())

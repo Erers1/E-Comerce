@@ -8,7 +8,6 @@ public class CommentMapper {
         return CommentDTO.builder()
                 .id(comment.getId())
                 .username(comment.getUser().getUsername())
-                .productName(comment.getProduct().getName())
                 .content(comment.getContent())
                 .build();
     }

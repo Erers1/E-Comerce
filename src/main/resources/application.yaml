@@ -1,4 +1,8 @@
 spring:
+servlet:
+  multipart:
+    max-file-size: 10MB
+    max-request-size: 50MB
   application:
     name: ecomerce
   datasource:
@@ -19,5 +23,16 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
-  accessExpiration: ${JWT_ACCESS_EXPIRATION:900000}
+  accessExpiration: ${JWT_ACCESS_EXPIRATION:86400000}
   refreshExpiration: ${JWT_REFRESH_EXPIRATION:604800000}
+cloudinary:
+  cloudName: ${CLOUD_NAME}
+  apiKey: ${API_KEY}
+  apiSecret: ${API_SECRET}
+momo:
+  partnerCode: ${PARTNER_CODE}
+  accessKey: ${ACCESS_KEY}
+  secretKey: ${SECRET_KEY}
+  endpoint: ${END_POINT}
+  redirectUrl: ${REDIRECT_URL}
+  ipnUrl: ${IPN_URL}

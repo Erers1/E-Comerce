@@ -4,22 +4,19 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "tblAttrValue")
+@Table(name = "tblProductImage")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductAttrValue {
+public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String url;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "attributeVal_id")
-    private AttributeValue attributeValues;
 }

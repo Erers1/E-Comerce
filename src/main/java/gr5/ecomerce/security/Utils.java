@@ -19,9 +19,9 @@ public class Utils {
     @Value("${jwt.secret}")
     private String secret;
     @Value("${jwt.accessExpiration}")
-    private Long accessExpiration;
+    private long accessExpiration;
     @Value("${jwt.refreshExpiration}")
-    private Long refreshExpiration;
+    private long refreshExpiration;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());

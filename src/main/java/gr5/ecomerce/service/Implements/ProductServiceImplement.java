@@ -1,13 +1,12 @@
 package gr5.ecomerce.service.Implements;
 
-import gr5.ecomerce.dto.AttributesDTO;
-import gr5.ecomerce.dto.CategoriesDTO;
+import gr5.ecomerce.dto.AttributeDTO;
+import gr5.ecomerce.dto.CategoryDTO;
 import gr5.ecomerce.dto.ProductDTO;
 import gr5.ecomerce.dto.TopProductDTO;
 import gr5.ecomerce.entity.*;
 import gr5.ecomerce.mapper.ProductMapper;
-import gr5.ecomerce.repository.OrderDetailRepository;
-import gr5.ecomerce.repository.ProductRepository;
+import gr5.ecomerce.repository.*;
 import gr5.ecomerce.service.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,37 +24,52 @@ import java.util.List;
 public class ProductServiceImplement implements ProductService {
     private final ProductRepository repository;
     private final OrderDetailRepository orderDetailRepository;
+    private final CategoryRepository categoryRepository;
+    private final AttributeRepository attributeRepository;
+    private final AttributeValueRepository attributeValueRepository;
 
     @Override
     public ResponseEntity<ProductDTO> add(ProductDTO dto) {
         Product product = ProductMapper.toEntity(dto);
-
-        List<Categories> categories = new ArrayList<>();
-
-        for (CategoriesDTO category : dto.getCategories()) {
-            Categories cat = Categories.builder()
-                    .product(product)
-                    .name(category.getName()).build();
-            List<Attributes> attributes = new ArrayList<>();
-            for (AttributesDTO attribute : category.getAttributes()) {
-                Attributes a = Attributes.builder()
-                        .name(attribute.getName())
-                        .categories(cat)
+        Set<Category> categories = new HashSet<>();
+        List<ProductAttrValue> productAttrValues = new ArrayList<>();
+        for (CategoryDTO category : dto.getCategories()) {
+            Category categoryExist = categoryRepository.findByName(category.getName());
+            if (categoryExist == null) {
+                categoryExist = Category.builder()
+                        .name(category.getName())
                         .build();
-                List<ProductAttrValue> productAttrValues = new ArrayList<>();
-                for (String value : attribute.getValue()) {
-                    ProductAttrValue pav = ProductAttrValue.builder()
-                            .attributes(a)
-                            .products(product)
-                            .value(value).build();
-                    productAttrValues.add(pav);
-                }
-                a.setProductAttrValues(productAttrValues);
-                attributes.add(a);
+                categoryRepository.save(categoryExist);
             }
-            cat.setAttributes(attributes);
-            categories.add(cat);
+            categories.add(categoryExist);
         }
+        for (AttributeDTO attribute : dto.getAttributes()) {
+            Attribute attributeExist = attributeRepository.findByName(attribute.getName());
+            if (attributeExist == null) {
+                attributeExist = Attribute.builder()
+                        .name(attribute.getName())
+                        .build();
+                attributeRepository.save(attributeExist);
+            }
+            for (String attributeValue : attribute.getValue()) {
+                String val = attributeValue.trim().toLowerCase();
+                AttributeValue attributeValueExist = attributeValueRepository
+                        .findByValueAndAttribute(attributeExist.getId(), val);
+                if (attributeValueExist == null) {
+                    attributeValueExist = AttributeValue.builder()
+                            .value(val)
+                            .attribute(attributeExist)
+                            .build();
+                    attributeValueRepository.save(attributeValueExist);
+                }
+                ProductAttrValue productAttrValue = ProductAttrValue.builder()
+                        .product(product)
+                        .attributeValues(attributeValueExist)
+                        .build();
+                productAttrValues.add(productAttrValue);
+            }
+        }
+        product.setProductAttrValues(productAttrValues);
         product.setCategories(categories);
         repository.save(product);
         return ResponseEntity.ok(ProductMapper.toDto(product));
@@ -97,10 +110,60 @@ public class ProductServiceImplement implements ProductService {
     public ResponseEntity<ProductDTO> update(Long id, ProductDTO dto) {
         Product product = repository.findById(id)
                 .orElseThrow(()->new RuntimeException("Product not found"));
+        Set<Category> categories = new HashSet<>();
+        List<ProductAttrValue> productAttrValues = new ArrayList<>();
+        for (CategoryDTO categoryDto : dto.getCategories()) {
+            Category categoryExist = categoryRepository.findByName(categoryDto.getName());
+            if (categoryExist == null) {
+                categoryExist = Category.builder()
+                        .name(categoryDto.getName())
+                        .build();
+                categoryRepository.save(categoryExist);
+            }
+            categories.add(categoryExist);
+        }
+        for (AttributeDTO attribute : dto.getAttributes()) {
+            Attribute attributeExist = attributeRepository.findByName(attribute.getName());
+            if (attributeExist == null) {
+                attributeExist = Attribute.builder()
+                        .name(attribute.getName())
+                        .build();
+                attributeRepository.save(attributeExist);
+            }
+            for (String attributeValue : attribute.getValue()) {
+                String val = attributeValue.trim().toLowerCase();
+                AttributeValue attributeValueExist = attributeValueRepository
+                        .findByValueAndAttribute(attributeExist.getId(), val);
+                if (attributeValueExist == null) {
+                    attributeValueExist = AttributeValue.builder()
+                            .value(val)
+                            .attribute(attributeExist)
+                            .build();
+                    attributeValueRepository.save(attributeValueExist);
+                }
+                ProductAttrValue productAttrValue = ProductAttrValue.builder()
+                        .product(product)
+                        .attributeValues(attributeValueExist)
+                        .build();
+                productAttrValues.add(productAttrValue);
+            }
+        }
+        List<ProductImage> img = new ArrayList<>();
+        for (String url : dto.getImg()) {
+            ProductImage productImage = ProductImage.builder()
+                    .url(url)
+                    .product(product)
+                    .build();
+            img.add(productImage);
+        }
+        product.getProductAttrValues().clear();
+        product.getProductAttrValues().addAll(productAttrValues);
+        product.getCategories().clear();
+        product.getCategories().addAll(categories);
         product.setName(dto.getName());
         product.setSellPrice(dto.getSellPrice());
         product.setStock(dto.getStock());
-        product.setImg(dto.getImg());
+        product.setImg(img);
         repository.save(product);
         return ResponseEntity.ok(ProductMapper.toDto(product));
     }

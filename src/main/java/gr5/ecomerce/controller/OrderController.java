@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/order")
@@ -41,6 +42,28 @@ public class OrderController {
     @PostMapping("/discount/create")
     public ResponseEntity<DiscountDTO> create(@Valid @RequestBody DiscountDTO dto) {
         return discountService.create(dto);
+    }
+
+    @PostMapping("/momo/create")
+    public ResponseEntity<String> createPayment(@RequestParam Long orderId) {
+        return service.createPayment(orderId);
+    }
+
+    @PostMapping("/momo/callback")
+    public ResponseEntity<Void> callback(@RequestBody Map<String, Object> payload) {
+        String resultCode = payload.get("resultCode").toString();
+        String orderId = payload.get("orderId").toString();
+        String[] parts = orderId.split("_");
+        Long id = Long.parseLong(parts[0]);
+
+        if ("0".equals(resultCode)) {
+            System.out.println("Thanh toán thành công order: " + orderId);
+            service.paid(id);
+        } else {
+            System.out.println("Thanh toán thất bại order: " + orderId);
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("hasRole('USER, SELLER')")

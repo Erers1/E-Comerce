@@ -12,7 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AttributesDTO {
+public class AttributeDTO {
+    private Long id;
     @NotNull(message = "Tên thuộc tính không được để trống")
     private String name;
     private List<String> value;
