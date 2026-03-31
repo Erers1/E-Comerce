@@ -9,4 +9,5 @@ public interface AuthService {
     ResponseEntity<String> register(UserDTO dto);
     ResponseEntity<String> login(AuthLoginDTO dto);
     ResponseEntity<String> logout(HttpServletRequest request);
+    ResponseEntity<String> refresh(HttpServletRequest request);
 }

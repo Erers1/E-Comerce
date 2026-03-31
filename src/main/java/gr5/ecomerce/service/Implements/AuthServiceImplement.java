@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -103,5 +104,30 @@ public class AuthServiceImplement implements AuthService {
                 .build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, deletedCookie.toString())
                 .body("Đăng xuất thành công!");
+    }
+
+    @Override
+    public ResponseEntity<String> refresh(HttpServletRequest request) {
+        String refreshToken = "";
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            throw new RuntimeException("Cookies is null");
+        }
+        for (Cookie cookie : cookies) {
+            if ("refresh-token".equals(cookie.getName())) {
+                refreshToken = cookie.getValue();
+            }
+        }
+        Session session = sessionRepository.findByRefreshToken(refreshToken);
+        if (session == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (session.getExpiredDate().before(new Date())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = session.getUser();
+        String accessToken = utils.generateToken(user.getId(), user.getUsername(), user.getRole());
+
+        return ResponseEntity.ok(accessToken);
     }
 }

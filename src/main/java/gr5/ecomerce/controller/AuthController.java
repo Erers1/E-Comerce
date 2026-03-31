@@ -26,8 +26,13 @@ public class AuthController {
         return service.login(dto);
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         return service.logout(request);
+    }
+
+    @GetMapping("/refresh")
+    public ResponseEntity<String> refresh(HttpServletRequest request) {
+        return service.refresh(request);
     }
 }
