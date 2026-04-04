@@ -33,6 +33,7 @@ public class ProductServiceImplement implements ProductService {
         Product product = ProductMapper.toEntity(dto);
         Set<Category> categories = new HashSet<>();
         List<ProductAttrValue> productAttrValues = new ArrayList<>();
+        List<ProductImage> productImages = new ArrayList<>();
         for (CategoryDTO category : dto.getCategories()) {
             Category categoryExist = categoryRepository.findByName(category.getName());
             if (categoryExist == null) {
@@ -69,6 +70,14 @@ public class ProductServiceImplement implements ProductService {
                 productAttrValues.add(productAttrValue);
             }
         }
+        for (String str : dto.getImg()) {
+            ProductImage productImage = ProductImage.builder()
+                    .url(str)
+                    .product(product)
+                    .build();
+            productImages.add(productImage);
+        }
+        product.setImg(productImages);
         product.setProductAttrValues(productAttrValues);
         product.setCategories(categories);
         repository.save(product);
