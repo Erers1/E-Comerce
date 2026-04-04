@@ -59,6 +59,8 @@ public class ProductMapper {
                 .id(product.getId())
                 .name(product.getName())
                 .img(urls)
+                .seller_id(product.getSeller().getId())
+                .seller_name(product.getSeller().getUsername())
                 .categories(categories)
                 .attributes(attributes)
                 .sellPrice(product.getSellPrice())

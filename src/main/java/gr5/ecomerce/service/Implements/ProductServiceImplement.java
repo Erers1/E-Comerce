@@ -27,9 +27,12 @@ public class ProductServiceImplement implements ProductService {
     private final CategoryRepository categoryRepository;
     private final AttributeRepository attributeRepository;
     private final AttributeValueRepository attributeValueRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public ResponseEntity<ProductDTO> add(ProductDTO dto) {
+    public ResponseEntity<ProductDTO> add(Long seller_id, ProductDTO dto) {
+        User user = userRepository.findById(seller_id)
+                .orElseThrow(()->new RuntimeException("User not found"));
         Product product = ProductMapper.toEntity(dto);
         Set<Category> categories = new HashSet<>();
         List<ProductAttrValue> productAttrValues = new ArrayList<>();
@@ -77,6 +80,7 @@ public class ProductServiceImplement implements ProductService {
                     .build();
             productImages.add(productImage);
         }
+        product.setSeller(user);
         product.setImg(productImages);
         product.setProductAttrValues(productAttrValues);
         product.setCategories(categories);
@@ -85,26 +89,29 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
-    public ResponseEntity<List<ProductDTO>> addAll(List<ProductDTO> dto) {
+    public ResponseEntity<List<ProductDTO>> addAll(Long seller_id, List<ProductDTO> dto) {
         List<ProductDTO> products = new ArrayList<>();
         for (ProductDTO productDTO : dto) {
-            products.add(add(productDTO).getBody());
+            products.add(add(seller_id, productDTO).getBody());
         }
         return ResponseEntity.ok(products);
     }
 
     @Override
-    public ResponseEntity<List<ProductDTO>> getAll(int page, int size) {
+    public ResponseEntity<List<ProductDTO>> getAll(Long seller_id, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").descending());
-        List<ProductDTO> products = repository.findAll(pageable).stream()
+        List<ProductDTO> products = repository.findBySellerId(seller_id, pageable).stream()
                 .map(ProductMapper::toDto).toList();
         return ResponseEntity.ok(products);
     }
 
     @Override
-    public ResponseEntity<ProductDTO> delete(Long id) {
+    public ResponseEntity<ProductDTO> delete(Long seller_id, Long id) {
         Product product = repository.findById(id)
                         .orElseThrow(()-> new RuntimeException("Product not found"));
+        if (product.getSeller().getId().equals(seller_id)) {
+            throw new RuntimeException("Seller not found");
+        }
         List<OrderDetail> list = orderDetailRepository.existsByProductId(product.getId());
         if (!list.isEmpty()) {
             throw new RuntimeException("Can't delete product");
@@ -116,11 +123,14 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     @Transactional
-    public ResponseEntity<ProductDTO> update(Long id, ProductDTO dto) {
+    public ResponseEntity<ProductDTO> update(Long seller_id, Long id, ProductDTO dto) {
         Product product = repository.findById(id)
                 .orElseThrow(()->new RuntimeException("Product not found"));
         Set<Category> categories = new HashSet<>();
         List<ProductAttrValue> productAttrValues = new ArrayList<>();
+        if (product.getSeller().getId().equals(seller_id)) {
+            throw new RuntimeException("Seller not found");
+        }
         for (CategoryDTO categoryDto : dto.getCategories()) {
             Category categoryExist = categoryRepository.findByName(categoryDto.getName());
             if (categoryExist == null) {

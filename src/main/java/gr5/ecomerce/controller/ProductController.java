@@ -25,14 +25,14 @@ public class ProductController {
 
     @PreAuthorize("hasRole('SELLER')")
     @PostMapping
-    public ResponseEntity<ProductDTO> add(@Valid @RequestBody ProductDTO dto) {
-        return service.add(dto);
+    public ResponseEntity<ProductDTO> add(@RequestParam Long sellerId, @Valid @RequestBody ProductDTO dto) {
+        return service.add(sellerId, dto);
     }
 
     @PreAuthorize("hasRole('SELLER')")
     @PostMapping("/all")
-    public ResponseEntity<List<ProductDTO>> addAll(@Valid @RequestBody List<ProductDTO> dto) {
-        return service.addAll(dto);
+    public ResponseEntity<List<ProductDTO>> addAll(@RequestParam Long sellerId, @Valid @RequestBody List<ProductDTO> dto) {
+        return service.addAll(sellerId, dto);
     }
 
     @PostMapping("/imgs")
@@ -43,20 +43,20 @@ public class ProductController {
 
     @PreAuthorize("hasRole('SELLER, USER')")
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAll(@RequestParam int page,@RequestParam int size) {
-        return service.getAll(page, size);
+    public ResponseEntity<List<ProductDTO>> getAll(@RequestParam Long sellerId, @RequestParam int page,@RequestParam int size) {
+        return service.getAll(sellerId, page, size);
     }
 
     @PreAuthorize("hasRole('SELLER')")
     @PutMapping("/update")
-    public ResponseEntity<ProductDTO> update(@RequestParam Long id, @Valid @RequestBody ProductDTO dto) {
-        return service.update(id, dto);
+    public ResponseEntity<ProductDTO> update(@RequestParam Long sellerId, @RequestParam Long id, @Valid @RequestBody ProductDTO dto) {
+        return service.update(sellerId, id, dto);
     }
 
     @PreAuthorize("hasRole('SELLER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ProductDTO> delete(@PathVariable Long id) {
-        return service.delete(id);
+    public ResponseEntity<ProductDTO> delete(@RequestParam Long sellerId, @PathVariable Long id) {
+        return service.delete(sellerId, id);
     }
 
     @PreAuthorize("hasRole('USER, ADMIN')")

@@ -28,5 +28,7 @@ public class ProductDTO {
     @NotNull(message = "Mỗi sản phẩm phải có ít nhất 1 ảnh")
     private List<String> img;
     private BigDecimal review;
+    private Long seller_id;
+    private String seller_name;
     private List<CommentDTO> comments;
 }
