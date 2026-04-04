@@ -32,13 +32,13 @@ public class OrderController {
         return service.create(userId, dto);
     }
 
-    @PreAuthorize("hasAnyRole('USER, ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @DeleteMapping("/cancel")
     public ResponseEntity<OrderDTO> cancel(@RequestParam Long id) {
         return service.cancel(id);
     }
 
-    @PreAuthorize("hasAnyRole('SELLER, ADMIN')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
     @PostMapping("/discount/create")
     public ResponseEntity<DiscountDTO> create(@Valid @RequestBody DiscountDTO dto) {
         return discountService.create(dto);
@@ -66,13 +66,13 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasAnyRole('USER, SELLER')")
+    @PreAuthorize("hasAnyRole('USER', 'SELLER')")
     @GetMapping("/discount")
     public ResponseEntity<List<DiscountDTO>> getAllDiscount() {
         return discountService.getAll();
     }
 
-    @PreAuthorize("hasAnyRole('SELLER, ADMIN')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
     @DeleteMapping("/discount/{id}")
     public ResponseEntity<DiscountDTO> delete(@PathVariable Long id) {
         return discountService.delete(id);
@@ -83,7 +83,7 @@ public class OrderController {
     public ResponseEntity<String> applyDiscount(@RequestParam Long orderId,@RequestParam Long discountId) {
         return discountService.apply(orderId, discountId);
     }
-    @PreAuthorize("hasAnyRole('SELLER, USER')")
+    @PreAuthorize("hasAnyRole('SELLER', 'USER')")
     @GetMapping("/shipping")
     public ResponseEntity<List<ShippingMethodDTO>> getAllShippingMethods() {
         return shippingMethodService.getAll();
