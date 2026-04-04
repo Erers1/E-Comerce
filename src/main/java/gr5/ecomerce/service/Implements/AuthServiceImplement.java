@@ -67,7 +67,8 @@ public class AuthServiceImplement implements AuthService {
 
         ResponseCookie cookie = ResponseCookie.from("refresh-token", refreshToken)
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
+                .sameSite("none")
                 .path("/")
                 .maxAge(refreshExpiration/1000)
                 .build();
@@ -98,7 +99,8 @@ public class AuthServiceImplement implements AuthService {
 
         ResponseCookie deletedCookie = ResponseCookie.from("refresh-token", "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
+                .sameSite("none")
                 .path("/")
                 .maxAge(0)
                 .build();
