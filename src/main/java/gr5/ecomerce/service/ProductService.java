@@ -9,7 +9,8 @@ import java.util.List;
 public interface ProductService {
     ResponseEntity<ProductDTO> add(Long seller_id, ProductDTO dto);
     ResponseEntity<List<ProductDTO>> addAll(Long seller_id, List<ProductDTO> dto);
-    ResponseEntity<List<ProductDTO>> getAll(Long seller_id, int page, int size);
+    ResponseEntity<List<ProductDTO>> getAll(int page, int size);
+    ResponseEntity<List<ProductDTO>> getBySellerId(Long seller_id, int page, int size);
     ResponseEntity<ProductDTO> delete(Long seller_id, Long id);
     ResponseEntity<ProductDTO> update(Long seller_id, Long id, ProductDTO dto);
     ResponseEntity<List<TopProductDTO>> topProduct();

@@ -98,9 +98,17 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
-    public ResponseEntity<List<ProductDTO>> getAll(Long seller_id, int page, int size) {
+    public ResponseEntity<List<ProductDTO>> getBySellerId(Long seller_id, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").descending());
         List<ProductDTO> products = repository.findBySellerId(seller_id, pageable).stream()
+                .map(ProductMapper::toDto).toList();
+        return ResponseEntity.ok(products);
+    }
+
+    @Override
+    public ResponseEntity<List<ProductDTO>> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").descending());
+        List<ProductDTO> products = repository.findAll(pageable).stream()
                 .map(ProductMapper::toDto).toList();
         return ResponseEntity.ok(products);
     }
@@ -109,7 +117,7 @@ public class ProductServiceImplement implements ProductService {
     public ResponseEntity<ProductDTO> delete(Long seller_id, Long id) {
         Product product = repository.findById(id)
                         .orElseThrow(()-> new RuntimeException("Product not found"));
-        if (product.getSeller().getId().equals(seller_id)) {
+        if (!product.getSeller().getId().equals(seller_id)) {
             throw new RuntimeException("Seller not found");
         }
         List<OrderDetail> list = orderDetailRepository.existsByProductId(product.getId());
@@ -128,7 +136,7 @@ public class ProductServiceImplement implements ProductService {
                 .orElseThrow(()->new RuntimeException("Product not found"));
         Set<Category> categories = new HashSet<>();
         List<ProductAttrValue> productAttrValues = new ArrayList<>();
-        if (product.getSeller().getId().equals(seller_id)) {
+        if (!product.getSeller().getId().equals(seller_id)) {
             throw new RuntimeException("Seller not found");
         }
         for (CategoryDTO categoryDto : dto.getCategories()) {

@@ -2,7 +2,6 @@ package gr5.ecomerce.controller;
 
 import gr5.ecomerce.dto.CommentDTO;
 import gr5.ecomerce.dto.ProductDTO;
-import gr5.ecomerce.dto.TopProductDTO;
 import gr5.ecomerce.service.CommentService;
 import gr5.ecomerce.service.ImageService;
 import gr5.ecomerce.service.ProductService;
@@ -41,10 +40,16 @@ public class ProductController {
         return imageService.uploadProductImage(product_id, files, filename);
     }
 
-    @PreAuthorize("hasRole('SELLER, USER')")
+    @PreAuthorize("hasRole('SELLER, USER, ADMIN')")
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAll(@RequestParam Long sellerId, @RequestParam int page,@RequestParam int size) {
-        return service.getAll(sellerId, page, size);
+    public ResponseEntity<List<ProductDTO>> getAll(@RequestParam int page,@RequestParam int size) {
+        return service.getAll(page, size);
+    }
+
+    @PreAuthorize("hasRole('SELLER')")
+    @GetMapping("/seller")
+    public ResponseEntity<List<ProductDTO>> getAll(@RequestParam Long sellerId, @RequestParam int page, @RequestParam int size) {
+        return service.getBySellerId(sellerId, page, size);
     }
 
     @PreAuthorize("hasRole('SELLER')")
