@@ -40,7 +40,7 @@ public class ProductController {
         return imageService.uploadProductImage(product_id, files, filename);
     }
 
-    @PreAuthorize("hasRole('SELLER, USER, ADMIN')")
+    @PreAuthorize("hasAnyRole('SELLER, USER, ADMIN')")
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAll(@RequestParam int page,@RequestParam int size) {
         return service.getAll(page, size);
@@ -64,13 +64,13 @@ public class ProductController {
         return service.delete(sellerId, id);
     }
 
-    @PreAuthorize("hasRole('USER, ADMIN')")
+    @PreAuthorize("hasAnyRole('USER, ADMIN')")
     @GetMapping("/comment")
     public ResponseEntity<List<CommentDTO>> getProductComments(@RequestParam Long productId) {
         return commentService.getCommentsByProduct(productId);
     }
 
-    @PreAuthorize("hasRole('USER, ADMIN')")
+    @PreAuthorize("hasAnyRole('USER, ADMIN')")
     @PostMapping("/comment/write")
     public ResponseEntity<CommentDTO> writeComment(@RequestParam Long userId,
                                                    @RequestParam Long productId,
@@ -78,7 +78,7 @@ public class ProductController {
         return commentService.writeComment(userId, productId, commentDTO);
     }
 
-    @PreAuthorize("hasRole('SELLER, ADMIN')")
+    @PreAuthorize("hasAnyRole('SELLER, ADMIN')")
     @DeleteMapping("/comment")
     public ResponseEntity<CommentDTO> deleteComment(@RequestParam Long userId,
                                                     @RequestParam Long productId,
