@@ -8,6 +8,7 @@ import gr5.ecomerce.entity.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class ProductMapper {
@@ -15,6 +16,8 @@ public class ProductMapper {
         return Product.builder()
                 .name(dto.getName())
                 .img(new ArrayList<>())
+                .categories(new HashSet<>())
+                .productAttrValues(new ArrayList<>())
                 .sellPrice(dto.getSellPrice())
                 .stock(dto.getStock())
                 .review(dto.getReview())
