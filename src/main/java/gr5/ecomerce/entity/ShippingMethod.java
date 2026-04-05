@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,5 +23,5 @@ public class ShippingMethod {
     private BigDecimal fee;
 
     @OneToMany(mappedBy = "shippingMethod", cascade = CascadeType.ALL,  orphanRemoval = true)
-    private List<Order> order;
+    private List<Order> order = new ArrayList<>();
 }

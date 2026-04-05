@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,7 +39,7 @@ public class Order {
     private String userNote = "NONE";
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderDetail> orderDetail;
+    private List<OrderDetail> orderDetail = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class Product {
     private int stock;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> img;
+    private List<ProductImage> img = new ArrayList<>();
 
     private BigDecimal review;
     private boolean isDeleted;
@@ -37,10 +38,10 @@ public class Product {
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductAttrValue> productAttrValues;
+    private List<ProductAttrValue> productAttrValues = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,  orphanRemoval = true)
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "seller_id")

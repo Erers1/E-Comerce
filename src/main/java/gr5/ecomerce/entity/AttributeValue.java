@@ -3,6 +3,7 @@ package gr5.ecomerce.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,5 +24,5 @@ public class AttributeValue {
     private Attribute attribute;
 
     @OneToMany(mappedBy = "attributeValues", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductAttrValue> attributeValues;
+    private List<ProductAttrValue> attributeValues = new ArrayList<>();
 }
