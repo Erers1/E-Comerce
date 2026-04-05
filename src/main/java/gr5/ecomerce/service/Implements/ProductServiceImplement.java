@@ -115,7 +115,7 @@ public class ProductServiceImplement implements ProductService {
     @Override
     public ResponseEntity<List<ProductDTO>> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").descending());
-        List<ProductDTO> products = repository.findAll(pageable).stream()
+        List<ProductDTO> products = repository.findAllActiveProduct(pageable).stream()
                 .map(ProductMapper::toDto).toList();
         return ResponseEntity.ok(products);
     }

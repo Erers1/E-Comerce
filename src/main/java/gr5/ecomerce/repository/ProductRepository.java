@@ -11,6 +11,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
+    @Query("select p from Product p where p.isDeleted = false")
+    List<Product> findAllActiveProduct(Pageable pageable);
+
     @Query("select p from Product p where p.seller.id = :sellerId and p.isDeleted = false")
     List<Product> findBySellerId(@Param("sellerId") Long sellerId, Pageable pageable);
 }

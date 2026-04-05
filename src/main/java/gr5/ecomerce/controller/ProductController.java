@@ -42,13 +42,13 @@ public class ProductController {
 
     @PreAuthorize("hasAnyRole('SELLER', 'USER', 'ADMIN')")
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAll(@RequestParam int page,@RequestParam int size) {
+    public ResponseEntity<List<ProductDTO>> getAllActiveProduct(@RequestParam int page,@RequestParam int size) {
         return service.getAll(page, size);
     }
 
     @PreAuthorize("hasRole('SELLER')")
     @GetMapping("/seller")
-    public ResponseEntity<List<ProductDTO>> getAll(@RequestParam Long sellerId, @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<ProductDTO>> getAllProductSeller(@RequestParam Long sellerId, @RequestParam int page, @RequestParam int size) {
         return service.getBySellerId(sellerId, page, size);
     }
 
