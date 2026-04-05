@@ -81,9 +81,16 @@ public class ProductServiceImplement implements ProductService {
             productImages.add(productImage);
         }
         product.setSeller(user);
-        product.setImg(productImages);
-        product.setProductAttrValues(productAttrValues);
-        product.setCategories(categories);
+
+        product.getImg().clear();
+        product.getImg().addAll(productImages);
+
+        product.getProductAttrValues().clear();
+        product.getProductAttrValues().addAll(productAttrValues);
+
+        product.getCategories().clear();
+        product.getCategories().addAll(categories);
+
         repository.save(product);
         return ResponseEntity.ok(ProductMapper.toDto(product));
     }
@@ -183,14 +190,20 @@ public class ProductServiceImplement implements ProductService {
                     .build();
             img.add(productImage);
         }
+
         product.getProductAttrValues().clear();
         product.getProductAttrValues().addAll(productAttrValues);
+
         product.getCategories().clear();
         product.getCategories().addAll(categories);
+
         product.setName(dto.getName());
         product.setSellPrice(dto.getSellPrice());
         product.setStock(dto.getStock());
-        product.setImg(img);
+
+        product.getImg().clear();
+        product.getImg().addAll(img);
+
         repository.save(product);
         return ResponseEntity.ok(ProductMapper.toDto(product));
     }
