@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
@@ -22,13 +23,13 @@ public class ProductController {
     private final CommentService commentService;
     private final ImageService imageService;
 
-    @PreAuthorize("hasRole('SELLER')")
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ROLE_SELLER')")
     @PostMapping
     public ResponseEntity<ProductDTO> add(@RequestParam Long sellerId, @Valid @RequestBody ProductDTO dto) {
         return service.add(sellerId, dto);
     }
 
-    @PreAuthorize("hasRole('SELLER')")
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ROLE_SELLER')")
     @PostMapping("/all")
     public ResponseEntity<List<ProductDTO>> addAll(@RequestParam Long sellerId, @Valid @RequestBody List<ProductDTO> dto) {
         return service.addAll(sellerId, dto);
@@ -40,37 +41,37 @@ public class ProductController {
         return imageService.uploadProductImage(product_id, files, filename);
     }
 
-    @PreAuthorize("hasAnyRole('SELLER', 'USER', 'ADMIN')")
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAllActiveProduct(@RequestParam int page,@RequestParam int size) {
         return service.getAll(page, size);
     }
 
-    @PreAuthorize("hasRole('SELLER')")
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ROLE_SELLER')")
     @GetMapping("/seller")
     public ResponseEntity<List<ProductDTO>> getAllProductSeller(@RequestParam Long sellerId, @RequestParam int page, @RequestParam int size) {
         return service.getBySellerId(sellerId, page, size);
     }
 
-    @PreAuthorize("hasRole('SELLER')")
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ROLE_SELLER')")
     @PutMapping("/update")
     public ResponseEntity<ProductDTO> update(@RequestParam Long sellerId, @RequestParam Long id, @Valid @RequestBody ProductDTO dto) {
         return service.update(sellerId, id, dto);
     }
 
-    @PreAuthorize("hasRole('SELLER')")
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ROLE_SELLER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDTO> delete(@RequestParam Long sellerId, @PathVariable Long id) {
         return service.delete(sellerId, id);
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN', 'ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/comment")
     public ResponseEntity<List<CommentDTO>> getProductComments(@RequestParam Long productId) {
         return commentService.getCommentsByProduct(productId);
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN', 'ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping("/comment/write")
     public ResponseEntity<CommentDTO> writeComment(@RequestParam Long userId,
                                                    @RequestParam Long productId,
@@ -78,7 +79,7 @@ public class ProductController {
         return commentService.writeComment(userId, productId, commentDTO);
     }
 
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ADMIN', 'ROLE_SELLER', 'ROLE_ADMIN')")
     @DeleteMapping("/comment")
     public ResponseEntity<CommentDTO> deleteComment(@RequestParam Long userId,
                                                     @RequestParam Long productId,
