@@ -26,26 +26,26 @@ public class OrderController {
     private final DiscountService discountService;
     private final ShippingMethodService shippingMethodService;
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ROLE_USER')")
     @PostMapping("/create")
     public ResponseEntity<OrderDTO> create(@RequestParam Long userId,
                                            @Valid @RequestBody OrderReqDTO dto) {
         return service.create(userId, dto);
     }
 
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ADMIN', 'ROLE_SELLER', 'ROLE_ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         return service.getAllOrders();
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN', 'ROLE_USER', 'ROLE_ADMIN')")
     @DeleteMapping("/cancel")
     public ResponseEntity<OrderDTO> cancel(@RequestParam Long id) {
         return service.cancel(id);
     }
 
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ADMIN', 'ROLE_SELLER', 'ROLE_ADMIN')")
     @PostMapping("/discount/create")
     public ResponseEntity<DiscountDTO> create(@Valid @RequestBody DiscountDTO dto) {
         return discountService.create(dto);
@@ -73,30 +73,31 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'SELLER')")
+    @PreAuthorize("hasAnyAuthority('USER', 'SELLER', 'ROLE_USER', 'ROLE_SELLER')")
     @GetMapping("/discount")
     public ResponseEntity<List<DiscountDTO>> getAllDiscount() {
         return discountService.getAll();
     }
 
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ADMIN', 'ROLE_SELLER', 'ROLE_ADMIN')")
     @DeleteMapping("/discount/{id}")
     public ResponseEntity<DiscountDTO> delete(@PathVariable Long id) {
         return discountService.delete(id);
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ROLE_USER')")
     @PostMapping("/discount")
     public ResponseEntity<String> applyDiscount(@RequestParam Long orderId,@RequestParam Long discountId) {
         return discountService.apply(orderId, discountId);
     }
-    @PreAuthorize("hasAnyRole('SELLER', 'USER')")
+
+    @PreAuthorize("hasAnyAuthority('SELLER', 'USER', 'ROLE_SELLER', 'ROLE_USER')")
     @GetMapping("/shipping")
     public ResponseEntity<List<ShippingMethodDTO>> getAllShippingMethods() {
         return shippingMethodService.getAll();
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ROLE_USER')")
     @PostMapping("/shipping")
     public ResponseEntity<String> applyShippingMethods(@RequestParam Long orderId, @RequestParam Long shippingId) {
         return shippingMethodService.apply(orderId, shippingId);
