@@ -96,6 +96,15 @@ public class OrderServiceImplement implements OrderService {
     }
 
     @Override
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderDTO> orderDTOs = orders.stream()
+                .map(OrderMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(orderDTOs);
+    }
+
+    @Override
     public ResponseEntity<String> createPayment(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("Order not found"));

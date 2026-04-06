@@ -33,6 +33,12 @@ public class OrderController {
         return service.create(userId, dto);
     }
 
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        return service.getAllOrders();
+    }
+
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @DeleteMapping("/cancel")
     public ResponseEntity<OrderDTO> cancel(@RequestParam Long id) {
