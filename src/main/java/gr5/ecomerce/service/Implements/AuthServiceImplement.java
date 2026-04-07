@@ -56,12 +56,14 @@ public class AuthServiceImplement implements AuthService {
         String accessToken = utils.generateToken(user.getId(), user.getUsername(), user.getRole());
         String refreshToken = utils.generateRefreshToken(user.getId(), user.getUsername());
 
-        Session session = Session.builder()
-                .user(user)
-                .refreshToken(refreshToken)
-                .accessToken(accessToken)
-                .expiredDate(new Date(System.currentTimeMillis()+refreshExpiration))
-                .build();
+        Session session = user.getSession();
+        if (session == null) {
+            session = new Session();
+            session.setUser(user);
+        }
+        session.setRefreshToken(refreshToken);
+        session.setAccessToken(accessToken);
+        session.setExpiredDate(new Date(System.currentTimeMillis() + refreshExpiration));
 
         sessionRepository.save(session);
 
