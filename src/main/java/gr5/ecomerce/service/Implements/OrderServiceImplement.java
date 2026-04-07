@@ -54,9 +54,13 @@ public class OrderServiceImplement implements OrderService {
             Product product = productRepository.findById(dto.getProductId())
                     .orElseThrow(()->new RuntimeException("Product not found"));
 
+            // 1. Kiểm tra kho
             if (product.getStock() < dto.getQuantity()) {
                 throw new RuntimeException("Stock not enough");
             }
+
+            product.setStock(product.getStock() - dto.getQuantity());
+            productRepository.save(product);
 
             if (existed.containsKey(product.getId())) {
                 OrderDetail existedDetail = existed.get(product.getId());
@@ -192,15 +196,27 @@ public class OrderServiceImplement implements OrderService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<OrderDTO> cancel(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("Order not found"));
+
         if (order.getOrderStatus() != OrderStatus.DELIVERIED &&
-            order.getOrderStatus() != OrderStatus.COMPLETED) {
+                order.getOrderStatus() != OrderStatus.COMPLETED) {
+
             order.setOrderStatus(OrderStatus.CANCELED);
+
+            for (OrderDetail detail : order.getOrderDetail()) {
+                Product product = detail.getProduct();
+                product.setStock(product.getStock() + detail.getQuantity());
+                productRepository.save(product);
+            }
+
         } else {
             throw new RuntimeException("Your order has been deliveried or on their way!");
         }
+
+        orderRepository.save(order);
         return ResponseEntity.ok(OrderMapper.toDto(order));
     }
 
