@@ -4,6 +4,7 @@ import gr5.ecomerce.dto.DiscountDTO;
 import gr5.ecomerce.dto.OrderDTO;
 import gr5.ecomerce.dto.OrderReqDTO;
 import gr5.ecomerce.dto.ShippingMethodDTO;
+import gr5.ecomerce.entity.OrderStatus;
 import gr5.ecomerce.repository.OrderRepository;
 import gr5.ecomerce.service.DiscountService;
 import gr5.ecomerce.service.OrderService;
@@ -49,6 +50,13 @@ public class OrderController {
     public ResponseEntity<DiscountDTO> create(@Valid @RequestBody DiscountDTO dto) {
         return discountService.create(dto);
     }
+
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ADMIN', 'ROLE_SELLER', 'ROLE_ADMIN')")
+    @PutMapping("/update/status")
+    public ResponseEntity<OrderDTO> updateStatus(@RequestParam Long orderId, @RequestParam String status) {
+        return service.updateStatus(orderId, OrderStatus.valueOf(status));
+    }
+
 
     @PostMapping("/momo/create")
     public ResponseEntity<String> createPayment(@RequestParam Long orderId) {
