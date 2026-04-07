@@ -78,6 +78,16 @@ public class OrderController {
         return discountService.getAll();
     }
 
+    @PreAuthorize("hasAnyAuthority('USER', 'ROLE_USER')")
+    @GetMapping("/user")
+    public ResponseEntity<List<OrderDTO>> getUserOrders(
+            @RequestParam Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
+        return service.getUseOrders(userId, page, size);
+    }
+
+
     @PreAuthorize("hasAnyAuthority('SELLER', 'ADMIN', 'ROLE_SELLER', 'ROLE_ADMIN')")
     @DeleteMapping("/discount/{id}")
     public ResponseEntity<DiscountDTO> delete(@PathVariable Long id) {

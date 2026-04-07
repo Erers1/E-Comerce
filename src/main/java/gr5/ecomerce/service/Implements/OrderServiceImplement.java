@@ -11,6 +11,8 @@ import gr5.ecomerce.service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Hex;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -30,7 +32,6 @@ public class OrderServiceImplement implements OrderService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final MomoConfig momoConfig;
-    private final RestTemplate restTemplate;
 
     @Override
     @Transactional
@@ -39,7 +40,6 @@ public class OrderServiceImplement implements OrderService {
         Map<Long, OrderDetail> existed = new HashMap<>();
         Map<Long, Product> productMap = new HashMap<>();
 
-        // Kiểm tra thông tin khách hàng
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
 
@@ -50,7 +50,6 @@ public class OrderServiceImplement implements OrderService {
         List<OrderDetail> details = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
 
-        //Kiểm tra số lượng mua
         for (OrderDetailDTO dto : order.getItem()) {
             Product product = productRepository.findById(dto.getProductId())
                     .orElseThrow(()->new RuntimeException("Product not found"));
@@ -101,6 +100,18 @@ public class OrderServiceImplement implements OrderService {
         List<OrderDTO> orderDTOs = orders.stream()
                 .map(OrderMapper::toDto)
                 .toList();
+        return ResponseEntity.ok(orderDTOs);
+    }
+
+    @Override
+    public ResponseEntity<List<OrderDTO>> getUseOrders(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Order> orders = orderRepository.findByUserId(userId, pageable);
+
+        List<OrderDTO> orderDTOs = orders.stream()
+                .map(OrderMapper::toDto)
+                .toList();
+
         return ResponseEntity.ok(orderDTOs);
     }
 

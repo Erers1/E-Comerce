@@ -1,6 +1,7 @@
 package gr5.ecomerce.repository;
 
 import gr5.ecomerce.entity.Order;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +17,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
           and o.orderDate < :end
     """)
     List<Order> getProfit(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query("SELECT o FROM Order o WHERE o.user.id = :userId ORDER BY o.orderDate DESC")
+    List<Order> findByUserId(@Param("userId") Long userId, Pageable pageable);
 }

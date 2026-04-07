@@ -14,6 +14,7 @@ import java.util.List;
 public interface OrderService {
     ResponseEntity<OrderDTO> create(Long userId, OrderReqDTO order);
     ResponseEntity<List<OrderDTO>> getAllOrders();
+    ResponseEntity<List<OrderDTO>> getUseOrders(Long userId, int page, int size);
     ResponseEntity<String> createPayment(Long id);
     void paid(Long id);
     ResponseEntity<OrderDTO> cancel(Long id);
