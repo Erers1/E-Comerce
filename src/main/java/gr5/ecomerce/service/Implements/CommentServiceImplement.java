@@ -1,6 +1,7 @@
 package gr5.ecomerce.service.Implements;
 
 import gr5.ecomerce.dto.CommentDTO;
+import gr5.ecomerce.dto.CommentReqDTO;
 import gr5.ecomerce.entity.Comment;
 import gr5.ecomerce.entity.Product;
 import gr5.ecomerce.entity.User;
@@ -39,22 +40,17 @@ public class CommentServiceImplement implements CommentService {
     }
 
     @Override
-    public ResponseEntity<CommentDTO> writeComment(Long userId, Long productId, CommentDTO dto) {
+    public ResponseEntity<CommentDTO> writeComment(Long userId, CommentReqDTO dto) {
         User user = userRepository.findById(userId).orElseThrow(()->new RuntimeException("User not found"));
-        Product product = productRepository.findById(productId).orElseThrow(()->new RuntimeException("Product not found"));
+        Product product = productRepository.findById(dto.getProductId()).orElseThrow(()->new RuntimeException("Product not found"));
+
         Comment comment = new Comment();
-        comment.setRating(dto.getRating());
         comment.setContent(dto.getContent());
+        comment.setRating(dto.getRating());
         comment.setUser(user);
         comment.setProduct(product);
-        commentRepository.save(comment);
-        return ResponseEntity.ok(CommentMapper.toDto(comment));
-    }
 
-    @Override
-    public ResponseEntity<CommentDTO> deleteComment(Long userId, Long productId, Long commentId) {
-        Comment comment = commentRepository.findComment(userId, productId, commentId);
-        commentRepository.delete(comment);
+        commentRepository.save(comment);
         return ResponseEntity.ok(CommentMapper.toDto(comment));
     }
 }
