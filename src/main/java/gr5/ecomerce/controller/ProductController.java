@@ -69,20 +69,4 @@ public class ProductController {
     public ResponseEntity<List<CommentDTO>> getProductComments(@RequestParam Long productId) {
         return commentService.getCommentsByProduct(productId);
     }
-
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN', 'ROLE_USER', 'ROLE_ADMIN')")
-    @PostMapping("/comment/write")
-    public ResponseEntity<CommentDTO> writeComment(@RequestParam Long userId,
-                                                   @RequestParam Long productId,
-                                                   @Valid @RequestBody CommentDTO commentDTO) {
-        return commentService.writeComment(userId, productId, commentDTO);
-    }
-
-    @PreAuthorize("hasAnyAuthority('SELLER', 'ADMIN', 'ROLE_SELLER', 'ROLE_ADMIN')")
-    @DeleteMapping("/comment")
-    public ResponseEntity<CommentDTO> deleteComment(@RequestParam Long userId,
-                                                    @RequestParam Long productId,
-                                                    @RequestParam Long commentId) {
-        return commentService.deleteComment(userId, productId, commentId);
-    }
 }

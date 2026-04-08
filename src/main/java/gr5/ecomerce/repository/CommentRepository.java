@@ -1,5 +1,6 @@
 package gr5.ecomerce.repository;
 
+import gr5.ecomerce.dto.CommentDTO;
 import gr5.ecomerce.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Comment findComment(@Param("userId") Long userId,
                         @Param("productId") Long productId,
                         @Param("commentId") Long commentId);
+
+    @Query("SELECT new gr5.ecommerce.dto.CommentDTO(c.id, c.content, c.user.username, c.rating) " +
+            "FROM Comment c " +
+            "WHERE c.product.id = :productId " +
+            "ORDER BY c.id DESC")
+    List<CommentDTO> findByProductIdOrderByIdDesc(Long productId);
 }
