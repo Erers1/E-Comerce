@@ -31,6 +31,7 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/api/auth/**", "/error").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/product/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(sess->
                         sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -41,8 +42,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:5173",
+                "https://e-comerce-dt1r.onrender.com"
+        ));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "*"));
