@@ -13,4 +13,6 @@ public interface UserService {
     ResponseEntity<UserDTO> getUser(HttpServletRequest request);
     ResponseEntity<List<OrderDTO>> getHistory(Long id);
     ResponseEntity<String> setAvarta(MultipartFile file);
+    ResponseEntity<List<UserDTO>> getAllUsers();
+    void toggleUserStatus(Long id);
 }

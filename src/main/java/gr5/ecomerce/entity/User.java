@@ -24,6 +24,9 @@ public class User {
     private String address;
     private String avatar;
 
+    @Column(columnDefinition = "boolean default true")
+    private Boolean isActive = true;
+
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 

@@ -23,4 +23,17 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("SELECT DISTINCT o FROM Order o JOIN o.orderDetail od JOIN od.product p WHERE p.seller.id = :sellerId ORDER BY o.orderDate DESC")
     List<Order> findOrdersBySellerId(@Param("sellerId") Long sellerId);
+
+    @Query("""
+        SELECT DISTINCT o FROM Order o
+        JOIN o.orderDetail od
+        JOIN od.product p
+        WHERE o.orderDate >= :start AND o.orderDate < :end
+        AND p.seller.id = :sellerId
+    """)
+    List<Order> getProfitBySeller(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("sellerId") Long sellerId
+    );
 }

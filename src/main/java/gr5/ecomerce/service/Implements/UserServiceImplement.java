@@ -51,4 +51,28 @@ public class UserServiceImplement implements UserService {
     public ResponseEntity<String> setAvarta(MultipartFile file) {
         return null;
     }
+
+    @Override
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<User> users = repository.findAll();
+        return ResponseEntity.ok(users.stream().map(user -> {
+            UserDTO dto = new UserDTO();
+            dto.setId(user.getId());
+            dto.setUsername(user.getUsername());
+            dto.setEmail(user.getEmail());
+            dto.setRole(user.getRole());
+            dto.setIsActive(user.getIsActive());
+            return dto;
+        }).toList());
+    }
+
+    @Override
+    public void toggleUserStatus(Long id) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy User!"));
+
+        // Đảo ngược trạng thái: đang true thành false, đang false thành true
+        user.setIsActive(!user.getIsActive());
+        repository.save(user);
+    }
 }

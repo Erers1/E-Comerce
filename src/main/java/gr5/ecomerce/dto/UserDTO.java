@@ -23,4 +23,5 @@ public class UserDTO {
     private String address;
     private String avatar;
     private Role role;
+    private Boolean isActive;
 }
