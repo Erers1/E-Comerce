@@ -63,10 +63,4 @@ public class ProductController {
     public ResponseEntity<ProductDTO> delete(@RequestParam Long sellerId, @PathVariable Long id) {
         return service.delete(sellerId, id);
     }
-
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN', 'ROLE_USER', 'ROLE_ADMIN')")
-    @GetMapping("/comment")
-    public ResponseEntity<List<CommentDTO>> getProductComments(@RequestParam Long productId) {
-        return commentService.getCommentsByProduct(productId);
-    }
 }
