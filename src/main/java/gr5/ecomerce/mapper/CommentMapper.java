@@ -9,6 +9,7 @@ public class CommentMapper {
                 .id(comment.getId())
                 .username(comment.getUser().getUsername())
                 .content(comment.getContent())
+                .rating(comment.getRating())
                 .build();
     }
 }

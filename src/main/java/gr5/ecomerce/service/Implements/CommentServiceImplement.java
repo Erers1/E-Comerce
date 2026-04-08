@@ -43,6 +43,7 @@ public class CommentServiceImplement implements CommentService {
         User user = userRepository.findById(userId).orElseThrow(()->new RuntimeException("User not found"));
         Product product = productRepository.findById(productId).orElseThrow(()->new RuntimeException("Product not found"));
         Comment comment = new Comment();
+        comment.setRating(dto.getRating());
         comment.setContent(dto.getContent());
         comment.setUser(user);
         comment.setProduct(product);
