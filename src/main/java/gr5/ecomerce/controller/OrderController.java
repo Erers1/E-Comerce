@@ -51,6 +51,12 @@ public class OrderController {
         return discountService.create(dto);
     }
 
+    @PreAuthorize("hasAnyAuthority('SELLER', 'ROLE_SELLER')")
+    @GetMapping("/seller")
+    public ResponseEntity<List<OrderDTO>> getSellerOrders(@RequestParam Long sellerId) {
+        return service.getSellerOrders(sellerId);
+    }
+
     @PreAuthorize("hasAnyAuthority('SELLER', 'ADMIN', 'ROLE_SELLER', 'ROLE_ADMIN')")
     @PutMapping("/update/status")
     public ResponseEntity<OrderDTO> updateStatus(@RequestParam Long orderId, @RequestParam String status) {

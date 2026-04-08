@@ -120,6 +120,15 @@ public class OrderServiceImplement implements OrderService {
     }
 
     @Override
+    public ResponseEntity<List<OrderDTO>> getSellerOrders(Long sellerId) {
+        List<Order> orders = orderRepository.findOrdersBySellerId(sellerId);
+        List<OrderDTO> orderDTOs = orders.stream()
+                .map(OrderMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(orderDTOs);
+    }
+
+    @Override
     public ResponseEntity<OrderDTO> updateStatus(Long id, OrderStatus status) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));

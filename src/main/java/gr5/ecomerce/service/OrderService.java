@@ -16,6 +16,7 @@ public interface OrderService {
     ResponseEntity<OrderDTO> create(Long userId, OrderReqDTO order);
     ResponseEntity<List<OrderDTO>> getAllOrders();
     ResponseEntity<List<OrderDTO>> getUseOrders(Long userId, int page, int size);
+    ResponseEntity<List<OrderDTO>> getSellerOrders(Long sellerId);
     ResponseEntity<OrderDTO> updateStatus(Long id, OrderStatus status);
     ResponseEntity<String> createPayment(Long id);
     void paid(Long id);
