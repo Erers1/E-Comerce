@@ -27,23 +27,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+        if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
         String header = request.getHeader("Authorization");
-
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
-
         try {
-
             String token = header.substring(7);
-
             Long userId = Long.parseLong(jwtUtils.extractId(token));
-            String role = jwtUtils.extractRole(token);
-
             User user = repository.findById(userId)
                     .orElseThrow(()-> new RuntimeException("You need to login first!"));
-
             if (!jwtUtils.validate(token, user)) {
                 sendError(response, "Invalid token");
                 return;
@@ -64,7 +61,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 );
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             e.printStackTrace();
