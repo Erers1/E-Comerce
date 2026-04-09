@@ -45,7 +45,8 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173",
-                "https://e-comerce-dt1r.onrender.com"
+                "https://e-comerce-dt1r.onrender.com",
+                "https://e-commerce-frontend-zeta-lyart.vercel.app"
         ));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
