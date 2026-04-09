@@ -16,4 +16,5 @@ public class TopProductDTO {
     private Long id;
     private String name;
     private Long totalSold;
+    private BigDecimal sellPrice;
 }

@@ -14,9 +14,9 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     List<OrderDetail> existsByProductId(@Param("productId") Long productId);
 
     @Query("""
-        SELECT new gr5.ecomerce.dto.TopProductDTO(od.product.id, od.product.name, SUM(od.quantity))
+        SELECT new gr5.ecomerce.dto.TopProductDTO(od.product.id, od.product.name, SUM(od.quantity), od.product.sellPrice)
         FROM OrderDetail od
-        GROUP BY od.product.id, od.product.name
+        GROUP BY od.product.id, od.product.name, od.product.sellPrice
         ORDER BY SUM(od.quantity) DESC
     """)
     List<TopProductDTO> findTopProduct(Pageable pageable);
